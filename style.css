@@ -1,0 +1,228 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #feffea;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* تغيير من center إلى flex-start للأجهزة الصغيرة */
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.todo-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    margin-top: 20px; /* إضافة هامش علوي */
+}
+
+h1 {
+    text-align: center;
+    color: #424242;
+    margin-bottom: 15px;
+    font-size: 1.5rem; /* حجم خط أصغر للأجهزة الصغيرة */
+}
+
+.input-section {
+    display: flex;
+    margin-bottom: 15px;
+    flex-direction: column; /* تغيير إلى عمودي للأجهزة الصغيرة */
+    gap: 10px; /* إضافة فراغ بين العناصر */
+}
+
+#todo-input {
+    flex: 1;
+    padding: 12px 15px; /* زيادة الحشوة لسهولة اللمس */
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    font-size: 16px;
+    outline: none;
+    color: #424242;
+    width: 100%; /* عرض كامل */
+}
+
+#add-btn {
+    padding: 12px 20px; /* زيادة الحشوة لسهولة اللمس */
+    background-color: #fcfc62;
+    color: #424242;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    font-weight: bold;
+    width: 100%; /* عرض كامل */
+}
+
+.filters {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+    gap: 8px; /* تقليل الفراغ بين الأزرار */
+    flex-wrap: wrap; /* السماح بلف الأزرار إذا لزم الأمر */
+}
+
+.filter-btn {
+    padding: 8px 12px; /* تقليل الحشوة */
+    background-color: #feffea;
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #424242;
+    font-size: 0.9rem; /* حجم خط أصغر */
+}
+
+#todo-list {
+    list-style-type: none;
+    margin-bottom: 15px;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 10px; /* تقليل الحشوة الجانبية */
+    background-color: #feffea;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    transition: all 0.3s;
+    border: 1px solid #c9c9c9;
+}
+
+.todo-text {
+    flex: 1;
+    word-break: break-word;
+    color: #424242;
+    font-size: 0.95rem; /* حجم خط أصغر قليلاً */
+    padding-right: 5px; /* إضافة حشوة لمنع التلامس مع زر الحذف */
+}
+
+.delete-btn {
+    padding: 6px 10px; /* تقليل الحشوة */
+    background-color: #a3a3a3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: background-color 0.3s;
+    font-size: 0.85rem; /* حجم خط أصغر */
+}
+
+.stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem; /* حجم خط أصغر */
+    color: #a3a3a3;
+    flex-wrap: wrap; /* السماح بلف العناصر إذا لزم الأمر */
+    gap: 10px; /* إضافة فراغ بين العناصر */
+}
+
+#clear-completed {
+    background: none;
+    border: none;
+    color: #a3a3a3;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 0.9rem; /* حجم خط أصغر */
+}
+
+/* Media Queries للتكيف مع أحجام الشاشات المختلفة */
+
+/* للأجهزة اللوحية (768px فما فوق) */
+@media (min-width: 768px) {
+    .todo-container {
+        padding: 25px;
+        margin-top: 0; /* إزالة الهامش العلوي */
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+    
+    .input-section {
+        flex-direction: row; /* العودة إلى الاتجاه الأفقي */
+    }
+    
+    #todo-input {
+        border-radius: 4px 0 0 4px;
+        width: auto; /* إعادة ضبط العرض */
+    }
+    
+    #add-btn {
+        width: auto; /* إعادة ضبط العرض */
+        border-radius: 0 4px 4px 0;
+    }
+    
+    .filter-btn {
+        padding: 5px 15px;
+        font-size: 1rem;
+    }
+    
+    .todo-item {
+        padding: 12px 15px;
+    }
+    
+    .todo-text {
+        font-size: 1rem;
+    }
+    
+    .delete-btn {
+        padding: 5px 10px;
+        font-size: 0.9rem;
+    }
+    
+    .stats {
+        font-size: 0.95rem;
+    }
+}
+
+/* للأجهزة الكبيرة (992px فما فوق) */
+@media (min-width: 992px) {
+    body {
+        align-items: center; /* العودة إلى المركز للشاشات الكبيرة */
+    }
+    
+    .todo-container {
+        margin-top: 0;
+    }
+}
+
+/* تعديلات خاصة للشاشات الصغيرة جداً (أقل من 400px) */
+@media (max-width: 400px) {
+    body {
+        padding: 10px;
+    }
+    
+    .todo-container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 1.3rem;
+    }
+    
+    .filters {
+        gap: 5px;
+    }
+    
+    .filter-btn {
+        padding: 6px 8px;
+        font-size: 0.8rem;
+    }
+    
+    .stats {
+        flex-direction: column; /* تغيير إلى عمودي للشاشات الصغيرة جداً */
+        align-items: flex-start;
+    }
+}
