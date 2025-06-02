@@ -226,3 +226,259 @@ h1 {
         align-items: flex-start;
     }
 }
+
+/* كل الأنماط السابقة تبقى كما هي مع إضافة التالي */
+
+.due-date-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+    align-items: center;
+}
+
+.due-date-section label {
+    font-size: 0.9rem;
+    color: #424242;
+    margin-right: 4px;
+}
+
+.due-date-section select {
+    padding: 8px;
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    background-color: white;
+    color: #424242;
+    font-size: 0.9rem;
+}
+
+.task-meta {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8rem;
+    color: #a3a3a3;
+    margin-top: 5px;
+}
+
+.task-meta span {
+    margin: 2px 0;
+}
+
+.overdue {
+    border-left: 4px solid #ff6b6b;
+}
+
+@media (max-width: 600px) {
+    .due-date-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .due-date-section select {
+        width: 100%;
+    }
+}
+/* كل الأنماط السابقة تبقى كما هي مع إضافة التالي */
+
+.task-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 12px 0;
+}
+
+.category-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.category-section label {
+    font-size: 0.9rem;
+    color: #424242;
+}
+
+#task-category {
+    padding: 8px;
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    background-color: white;
+    color: #424242;
+    font-size: 0.9rem;
+}
+
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+}
+
+.category-filter-btn {
+    padding: 5px 10px;
+    background-color: #feffea;
+    border: 1px solid #c9c9c9;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #424242;
+    font-size: 0.85rem;
+}
+
+.category-filter-btn.active {
+    background-color: #fcfc62;
+    color: #424242;
+    border-color: #fcfc62;
+}
+
+.category-section {
+    margin-left: auto;
+}
+
+.category-header {
+    font-size: 1.2rem;
+    color: #424242;
+    margin: 20px 0 10px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #fcfc62;
+}
+
+.category-tasks {
+    margin-bottom: 25px;
+}
+
+.category-study .category-header {
+    border-bottom-color: #4CAF50; /* أخضر للدراسة */
+}
+
+.category-work .category-header {
+    border-bottom-color: #2196F3; /* أزرق للعمل */
+}
+
+.category-important .category-header {
+    border-bottom-color: #FF5722; /* برتقالي للمهم */
+}
+
+.category-not-important .category-header {
+    border-bottom-color: #9E9E9E; /* رمادي لغير المهم */
+}
+
+.task-category-label {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-left: 8px;
+    text-transform: uppercase;
+}
+
+.category-study .task-category-label {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.category-work .task-category-label {
+    background-color: #2196F3;
+    color: white;
+}
+
+.category-important .task-category-label {
+    background-color: #FF5722;
+    color: white;
+}
+
+.category-not-important .task-category-label {
+    background-color: #9E9E9E;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .task-details {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .category-section {
+        margin-left: 0;
+    }
+    
+    .category-filters {
+        gap: 5px;
+    }
+    
+    .category-filter-btn {
+        padding: 4px 8px;
+        font-size: 0.75rem;
+    }
+}
+
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+.star {
+    position: absolute;
+    font-size: 24px;
+    color: gold;
+    pointer-events: none;
+    animation: float-up 1.5s ease-out forwards;
+    z-index: 100;
+}
+
+@keyframes float-up {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #f00;
+    opacity: 0;
+    animation: confetti-fall 3s ease-in forwards;
+    z-index: 99;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100px) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+    }
+}
+
+#celebration-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 98;
+}
+
