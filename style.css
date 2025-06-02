@@ -461,6 +461,7 @@ h1 {
     z-index: 99;
 }
 
+
 @keyframes confetti-fall {
     0% {
         transform: translateY(-100px) rotate(0deg);
