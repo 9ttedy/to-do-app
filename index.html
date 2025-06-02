@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Simple To-Do List</title>
+    <title>Advanced To-Do List</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,22 +12,67 @@
         
         <div class="input-section">
             <input type="text" id="todo-input" placeholder="Add a new task...">
-            <button id="add-btn">Add</button>
+            
+            <div class="task-details">
+                <div class="due-date-section">
+                    <label for="due-day">Day:</label>
+                    <select id="due-day">
+                        <option value="">Any</option>
+                    </select>
+                    
+                    <label for="due-month">Month:</label>
+                    <select id="due-month">
+                        <option value="">Any</option>
+                    </select>
+                    
+                    <label for="due-year">Year:</label>
+                    <select id="due-year">
+                        <option value="">Any</option>
+                    </select>
+                </div>
+                
+                <div class="category-section">
+                    <label for="task-category">Category:</label>
+                    <select id="task-category">
+                        <option value="study">Study</option>
+                        <option value="work">Work</option>
+                        <option value="important">Important</option>
+                        <option value="not-important">Not Important</option>
+                    </select>
+                </div>
+            </div>
+            
+            <button id="add-btn">Add Task</button>
         </div>
         
-        <div class="filters">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="active">Active</button>
-            <button class="filter-btn" data-filter="completed">Completed</button>
+        <div class="controls">
+            <div class="filters">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+                <button class="filter-btn" data-filter="overdue">Overdue</button>
+            </div>
+            
+            <div class="category-filters">
+                <button class="category-filter-btn active" data-category="all">All Categories</button>
+                <button class="category-filter-btn" data-category="study">Study</button>
+                <button class="category-filter-btn" data-category="work">Work</button>
+                <button class="category-filter-btn" data-category="important">Important</button>
+                <button class="category-filter-btn" data-category="not-important">Not Important</button>
+            </div>
         </div>
         
-        <ul id="todo-list"></ul>
+        <div id="category-sections">
+            <!-- سيتم إنشاء أقسام الفئات ديناميكياً بواسطة JavaScript -->
+        </div>
         
         <div class="stats">
             <span id="items-left">0 items left</span>
             <button id="clear-completed">Clear Completed</button>
         </div>
     </div>
+
+    <div id="celebration-container"></div>
 
     <script src="script.js"></script>
 </body>
