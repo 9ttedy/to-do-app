@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // تهيئة التطبيق
     initDateSelectors();
+    initSearch();
     renderTodos();
     updateItemsLeft();
 
@@ -59,8 +60,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // أشهر
-        const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                       'July', 'August', 'September', 'October', 'November', 'December'];
+        const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
+                       'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
         months.forEach((month, index) => {
             const option = document.createElement('option');
             option.value = index + 1;
@@ -78,34 +79,58 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function initSearch() {
+        const searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.id = 'search-input';
+        searchInput.placeholder = 'ابحث عن مهام...';
+        searchInput.className = 'search-input';
+        
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.todo-item').forEach(item => {
+                const text = item.querySelector('.todo-text').textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+            });
+        });
+        
+        document.querySelector('.todo-container').insertBefore(searchInput, document.querySelector('.input-section'));
+    }
+
     function addTodo() {
         const text = todoInput.value.trim();
-        if (text) {
-            const dueDay = dueDaySelect.value;
-            const dueMonth = dueMonthSelect.value;
-            const dueYear = dueYearSelect.value;
-            const category = taskCategorySelect.value;
-            
-            let dueDate = null;
-            if (dueDay && dueMonth && dueYear) {
-                dueDate = new Date(dueYear, dueMonth - 1, dueDay).toISOString();
-            }
-
-            const newTodo = {
-                id: Date.now(),
-                text,
-                completed: false,
-                createdAt: new Date().toISOString(),
-                dueDate,
-                category
-            };
-
-            todos.push(newTodo);
-            saveTodos();
-            renderTodos();
-            resetInputFields();
-            updateItemsLeft();
+        
+        if (!text) {
+            showToast('الرجاء إدخال نص المهمة', 'error');
+            todoInput.focus();
+            return;
         }
+        
+        const dueDay = dueDaySelect.value;
+        const dueMonth = dueMonthSelect.value;
+        const dueYear = dueYearSelect.value;
+        const category = taskCategorySelect.value;
+        
+        let dueDate = null;
+        if (dueDay && dueMonth && dueYear) {
+            dueDate = new Date(dueYear, dueMonth - 1, dueDay).toISOString();
+        }
+
+        const newTodo = {
+            id: Date.now(),
+            text,
+            completed: false,
+            createdAt: new Date().toISOString(),
+            dueDate,
+            category
+        };
+
+        todos.push(newTodo);
+        saveTodos();
+        renderTodos();
+        resetInputFields();
+        updateItemsLeft();
+        showToast('تمت إضافة المهمة بنجاح', 'success');
     }
 
     function resetInputFields() {
@@ -157,10 +182,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showNoTasksMessage() {
         const emptyMessage = document.createElement('div');
-        emptyMessage.textContent = 'No tasks found';
-        emptyMessage.style.textAlign = 'center';
-        emptyMessage.style.color = '#a3a3a3';
-        emptyMessage.style.padding = '20px';
+        emptyMessage.className = 'empty-state';
+        emptyMessage.innerHTML = `
+            <img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png" alt="لا توجد مهام">
+            <h3>لا توجد مهام حالياً!</h3>
+            <p>ابدأ بإضافة مهمة جديدة لتنظيم يومك</p>
+        `;
         categorySections.appendChild(emptyMessage);
     }
 
@@ -202,10 +229,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function getCategoryName(category) {
         const names = {
-            'study': 'Study',
-            'work': 'Work',
-            'important': 'Important',
-            'not-important': 'Not Important'
+            'study': 'الدراسة',
+            'work': 'العمل',
+            'important': 'المهم',
+            'not-important': 'غير المهم'
         };
         return names[category];
     }
@@ -232,20 +259,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         const createdAt = new Date(todo.createdAt);
-        const createdStr = `Added: ${createdAt.toLocaleDateString()} ${createdAt.toLocaleTimeString()}`;
+        const createdStr = `تم الإضافة: ${createdAt.toLocaleDateString('ar-EG')} ${createdAt.toLocaleTimeString('ar-EG')}`;
         
-        let dueStr = 'No due date';
+        let dueStr = 'لا يوجد تاريخ';
         if (todo.dueDate) {
             const dueDate = new Date(todo.dueDate);
-            dueStr = `Due: ${dueDate.toLocaleDateString()}`;
+            dueStr = `الاستحقاق: ${dueDate.toLocaleDateString('ar-EG')}`;
         }
 
-        const categoryLabel = {
-            'study': 'STUDY',
-            'work': 'WORK',
-            'important': 'IMPORTANT',
-            'not-important': 'NOT IMPORTANT'
-        }[todo.category];
+        const timeRemaining = getTimeRemaining(todo.dueDate);
+        const categoryLabel = getCategoryLabel(todo.category);
 
         todoItem.innerHTML = `
             <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} data-id="${todo.id}">
@@ -256,13 +279,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="task-meta">
                     <span class="created-date">${createdStr}</span>
-                    <span class="due-date">${dueStr}</span>
+                    <span class="due-date ${timeRemaining.class}">
+                        ${dueStr} • ${timeRemaining.text}
+                        <span class="time-visual" style="width:${getTimeVisual(todo.dueDate)}%"></span>
+                    </span>
                 </div>
             </div>
-            <button class="delete-btn" data-id="${todo.id}">Delete</button>
+            <div class="task-actions">
+                <button class="edit-btn" data-id="${todo.id}">تعديل</button>
+                <button class="delete-btn" data-id="${todo.id}">حذف</button>
+            </div>
         `;
 
         return todoItem;
+    }
+
+    function getCategoryLabel(category) {
+        const labels = {
+            'study': 'دراسة',
+            'work': 'عمل',
+            'important': 'مهم',
+            'not-important': 'غير مهم'
+        };
+        return labels[category];
     }
 
     function addEventListenersToTasks() {
@@ -272,6 +311,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', deleteTodo);
+        });
+
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = parseInt(e.target.dataset.id);
+                const todo = todos.find(todo => todo.id === id);
+                const todoItem = e.target.closest('.todo-item');
+                if (todo) enableEditMode(todoItem, todo);
+            });
+        });
+    }
+
+    function enableEditMode(todoItem, todo) {
+        const todoText = todoItem.querySelector('.todo-text');
+        const currentText = todoText.textContent;
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = currentText;
+        input.className = 'edit-input';
+        
+        todoText.replaceWith(input);
+        input.focus();
+        
+        function saveEdit() {
+            const newText = input.value.trim();
+            if (newText && newText !== currentText) {
+                todo.text = newText;
+                saveTodos();
+                renderTodos();
+                showToast('تم تعديل المهمة بنجاح', 'success');
+            } else {
+                renderTodos();
+            }
+        }
+        
+        input.addEventListener('blur', saveEdit);
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') saveEdit();
         });
     }
 
@@ -293,39 +371,75 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function deleteTodo(e) {
+        if (!confirm('هل أنت متأكد من حذف هذه المهمة؟')) return;
+        
         const id = parseInt(e.target.dataset.id);
         todos = todos.filter(todo => todo.id !== id);
         saveTodos();
         renderTodos();
         updateItemsLeft();
+        showToast('تم حذف المهمة بنجاح', 'success');
     }
 
     function clearCompleted() {
+        if (!confirm('هل أنت متأكد من حذف جميع المهام المكتملة؟')) return;
+        
         todos = todos.filter(todo => !todo.completed);
         saveTodos();
         renderTodos();
         updateItemsLeft();
+        showToast('تم حذف المهام المكتملة', 'success');
     }
 
     function updateItemsLeft() {
         const activeTodos = todos.filter(todo => !todo.completed).length;
-        itemsLeftSpan.textContent = `${activeTodos} ${activeTodos === 1 ? 'item' : 'items'} left`;
+        itemsLeftSpan.textContent = `${activeTodos} ${activeTodos === 1 ? 'مهمة باقية' : 'مهام باقية'}`;
     }
 
     function saveTodos() {
         localStorage.setItem('todos', JSON.stringify(todos));
     }
 
-    // تأثيرات الاحتفال
+    function getTimeRemaining(dueDate) {
+        if (!dueDate) return { text: 'لا يوجد تاريخ', class: '' };
+        
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const due = new Date(dueDate);
+        due.setHours(0, 0, 0, 0);
+        
+        const diffTime = due - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        if (diffDays === 0) return { text: 'ينتهي اليوم!', class: 'due-today' };
+        if (diffDays < 0) return { text: `متأخر ${Math.abs(diffDays)} يوم`, class: 'overdue' };
+        if (diffDays === 1) return { text: 'غداً', class: 'due-soon' };
+        if (diffDays <= 7) return { text: `${diffDays} أيام متبقية`, class: 'due-soon' };
+        return { text: `${diffDays} يوم متبقي`, class: '' };
+    }
+
+    function getTimeVisual(dueDate) {
+        if (!dueDate) return 0;
+        
+        const today = new Date();
+        const due = new Date(dueDate);
+        const totalDays = Math.ceil((due - today) / (1000 * 60 * 60 * 24));
+        
+        if (totalDays < 0) return 100;
+        
+        const maxDays = 30;
+        return Math.min(100, Math.max(0, 100 - (totalDays / maxDays * 100)));
+    }
+
     function celebrateCompletion(element) {
         if (!element) return;
         
-        // 1. تأثير الاهتزاز
+        // تأثير الاهتزاز
         const container = document.querySelector('.todo-container');
         container.classList.add('shake');
         setTimeout(() => container.classList.remove('shake'), 500);
         
-        // 2. إنشاء النجوم
+        // إنشاء النجوم
         const rect = element.getBoundingClientRect();
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
@@ -378,25 +492,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // إضافة أنماط CSS للحركات
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-            20%, 40%, 60%, 80% { transform: translateX(5px); }
-        }
-        .shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97); }
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.textContent = message;
         
-        @keyframes float-up {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
+        document.getElementById('toast-container').appendChild(toast);
         
-        @keyframes confetti-fall {
-            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-        }
-    `;
-    document.head.appendChild(style);
+        setTimeout(() => {
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }, 100);
+    }
 });
